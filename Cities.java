@@ -6,39 +6,31 @@ import java.nio.file.Paths;
 class Cities{
     private Cities citiesInstance;
     private City[] CityList;
-    private Cities(){}
     
     public Cities GetCitiesInstance(){
         if(citiesInstance == null){
             citiesInstance = new Cities();
+            createCityList();
         }
         return citiesInstance;
     }
-
-    private JSONArray createCityList(){
-        try{
-            String Jcontent = new String(Files.readAllBytes(Paths.get("cities.json")));
-            JSONObject jsonObject = new JSONObject(Jcontent);
-            JSONArray cityNames = JSONObject.getJSONArray("name");
-            return cityNames;
-        }
-        catch(Exception e){
-            e.printStackTrace();
-        }
-        
+    public City[] getCityList(){
+        return CityList;
     }
-    public static void main(String[]args){
-        try{
-            String[] names = new String[11];
-            int i =  0;
-            
-            for(String name : cityNames){
-                names[i] = name;
-                System.out.println(names[i]);
-                i++;
+
+    private void createCityList(){
+        try {
+            String Jcontent = new String(Files.readAllBytes(Paths.get("cities.json")));
+            JSONArray citiesArray = new JSONArray(Jcontent);
+
+            City[] cityList = new City[citiesArray.length()];   
+
+            for (int i = 0; i < citiesArray.length(); i++) {
+                JSONObject city = citiesArray.getJSONObject(i);
+                cityList[i] = new City(city.getString("name"), city.getDouble("population"), city.getFloat("area"), city.getFloat("currentTemperature"), city.getString("currentWeatherState"));
             }
 
-            
+            CityList = cityList;
         }
         catch(Exception e){
             e.printStackTrace();
