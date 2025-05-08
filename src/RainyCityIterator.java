@@ -31,4 +31,15 @@ public class RainyCityIterator implements CityIterator {
     public void reset() {
         currentIndex = 0;
     }
+
+    @Override
+    public City[] getCityList() {
+        City[] rainyCities = new City[cityList.length];
+        for (int i = 0; i < cityList.length; i++) {
+            if (cityList[i].getCurrentWeatherCondition().equals("Rainy")) {
+                rainyCities[i] = cityList[i];
+            }
+        }
+        return rainyCities;
+    }
 }

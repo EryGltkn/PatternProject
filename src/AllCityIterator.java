@@ -24,4 +24,9 @@ public class AllCityIterator implements CityIterator {
     public void reset() {
         currentIndex = 0;
     }
+
+    @Override
+    public City[] getCityList() {
+        return cityList;
+    }
 }

@@ -1,9 +1,9 @@
-public class RainyCityIterator implements CityIterator {
+public class SnowyCityIterator implements CityIterator {
     private Cities citiesInstance;
     private City[] cityList;
     private int currentIndex = 0;
 
-    public RainyCityIterator() {
+    public SnowyCityIterator() {
         citiesInstance = new Cities().GetCitiesInstance();
         cityList = citiesInstance.getCityList();
     }
@@ -11,7 +11,7 @@ public class RainyCityIterator implements CityIterator {
     @Override
     public boolean hasNext() {
         while (currentIndex < cityList.length) {
-            if (cityList[currentIndex].getCurrentWeatherCondition().equals("Rainy")) {
+            if (cityList[currentIndex].getCurrentWeatherCondition().equals("Snowy")) {
                 return true;
             }
             currentIndex++;
@@ -30,5 +30,15 @@ public class RainyCityIterator implements CityIterator {
     @Override
     public void reset() {
         currentIndex = 0;
+    }
+
+    public City[] getCityList() {
+        City[] snowyCities = new City[cityList.length];
+        for (int i = 0; i < cityList.length; i++) {
+            if (cityList[i].getCurrentWeatherCondition().equals("Snowy")) {
+                snowyCities[i] = cityList[i];
+            }
+        }
+        return snowyCities;
     }
 }

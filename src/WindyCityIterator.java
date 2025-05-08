@@ -31,4 +31,13 @@ public class WindyCityIterator implements CityIterator {
     public void reset() {
         currentIndex = 0;
     }
+    public City[] getCityList() {
+        City[] windyCities = new City[cityList.length];
+        for (int i = 0; i < cityList.length; i++) {
+            if (cityList[i].getCurrentWeatherCondition().equals("Windy")) {
+                windyCities[i] = cityList[i];
+            }
+        }
+        return windyCities;
+    }
 }
