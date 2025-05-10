@@ -4,7 +4,7 @@ public class SunnyCityIterator implements CityIterator {
     private int currentIndex = 0;
 
     public SunnyCityIterator() {
-        citiesInstance = new Cities().GetCitiesInstance();
+        citiesInstance = Cities.GetCitiesInstance();
         cityList = citiesInstance.getCityList();
     }
 

@@ -4,7 +4,7 @@ public class SnowyCityIterator implements CityIterator {
     private int currentIndex = 0;
 
     public SnowyCityIterator() {
-        citiesInstance = new Cities().GetCitiesInstance();
+        citiesInstance = Cities.GetCitiesInstance();
         cityList = citiesInstance.getCityList();
     }
 

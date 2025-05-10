@@ -4,7 +4,7 @@ public class WindyCityIterator implements CityIterator {
     private int currentIndex = 0;
 
     public WindyCityIterator() {
-        citiesInstance = new Cities().GetCitiesInstance();
+        citiesInstance = Cities.GetCitiesInstance();
         cityList = citiesInstance.getCityList();
     }
 

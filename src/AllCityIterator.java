@@ -4,7 +4,7 @@ public class AllCityIterator implements CityIterator {
     private int currentIndex = 0;
 
     public AllCityIterator() {
-        citiesInstance = new Cities().GetCitiesInstance();
+        citiesInstance = Cities.GetCitiesInstance();
         cityList = citiesInstance.getCityList();
     }
 
