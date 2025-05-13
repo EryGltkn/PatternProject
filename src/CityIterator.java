@@ -3,4 +3,5 @@ public interface CityIterator {
     City next();
     void reset();
     City[] getCityList();
+    String[] getCityListInString();
 }

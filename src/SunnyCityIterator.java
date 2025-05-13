@@ -32,13 +32,26 @@ public class SunnyCityIterator implements CityIterator {
         currentIndex = 0;
     }
 
+    @Override
     public City[] getCityList() {
         City[] sunnyCities = new City[cityList.length];
         for (int i = 0; i < cityList.length; i++) {
-            if (cityList[i].getCurrentWeatherCondition().equals("Sunny")) {
+            if (cityList[i].getCurrentWeatherCondition().equals("SUNNY")) {
                 sunnyCities[i] = cityList[i];
             }
         }
         return sunnyCities;
+    }
+
+    @Override
+    public String[] getCityListInString() {
+        City[] sunnyCities = getCityList();
+        String[] sunnyCitiesString = new String[sunnyCities.length];
+        for (int i = 0; i < sunnyCities.length; i++) {
+            if (sunnyCities[i] != null) {
+                sunnyCitiesString[i] = "City Name: " + sunnyCities[i].getName() + "(Population:" + sunnyCities[i].getPopulation() + ", Area:" + sunnyCities[i].getArea() + ", Temperature: " + sunnyCities[i].getCurrentTemperature() + ", Weather Condition: " + sunnyCities[i].getCurrentWeatherCondition() + ")";
+            }
+        }
+        return sunnyCitiesString;
     }
 }

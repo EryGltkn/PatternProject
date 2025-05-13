@@ -31,13 +31,27 @@ public class WindyCityIterator implements CityIterator {
     public void reset() {
         currentIndex = 0;
     }
+
+    @Override
     public City[] getCityList() {
         City[] windyCities = new City[cityList.length];
         for (int i = 0; i < cityList.length; i++) {
-            if (cityList[i].getCurrentWeatherCondition().equals("Windy")) {
+            if (cityList[i].getCurrentWeatherCondition().equals("WINDY")) {
                 windyCities[i] = cityList[i];
             }
         }
         return windyCities;
+    }
+
+    @Override
+    public String[] getCityListInString() {
+        City[] windyCities = getCityList();
+        String[] windyCitiesString = new String[windyCities.length];
+        for (int i = 0; i < windyCities.length; i++) {
+            if (windyCities[i] != null) {
+                windyCitiesString[i] = "City Name: " + windyCities[i].getName() + "(Population:" + windyCities[i].getPopulation() + ", Area:" + windyCities[i].getArea() + ", Temperature: " + windyCities[i].getCurrentTemperature() + ", Weather Condition: " + windyCities[i].getCurrentWeatherCondition() + ")";
+            }
+        }
+        return windyCitiesString;
     }
 }
