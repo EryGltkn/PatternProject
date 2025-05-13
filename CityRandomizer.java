@@ -9,6 +9,7 @@ public class CityRandomizer {
                     for (City city : cityList) {
                         city.randomizeWeatherCondition();
                         city.randomizeTemperature();
+                        UI.updateUI();
                     }
                     Thread.sleep(5000);
                 } catch (InterruptedException e) {

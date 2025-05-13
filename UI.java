@@ -1,127 +1,114 @@
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JList;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JButton;
-import javax.swing.JTextField;
-import javax.swing.border.Border;
-import javax.swing.BorderFactory;
-import javax.swing.BoxLayout;
-import javax.swing.JComboBox;
-import java.awt.BorderLayout;
-import java.awt.FlowLayout;
-import java.awt.event.ItemListener;
-import java.util.concurrent.Flow;
-import java.awt.event.ItemEvent;
+import javax.swing.*;
+import java.awt.*;
 
 public class UI {
 
-    private static int frameWidth = 800;
-    private static int frameHeight = 600;
+    private static final int frameWidth = 800;
+    private static final int frameHeight = 600;
 
-    public static void createMainFrame(){
-        CityIterator allCityIterator = new AllCityIterator();
-        CityIterator sunnyCityIterator = new SunnyCityIterator();
-        CityIterator rainyCityIterator = new RainyCityIterator();
-        CityIterator snowyCityIterator = new SnowyCityIterator();
-        CityIterator windyCityIterator = new WindyCityIterator();
+    private static DefaultListModel<String> cityListModel1 = new DefaultListModel<>();
+    private static JList<String> cityList1 = new JList<>(cityListModel1);
+    private static CityIterator allCityIterator = new AllCityIterator();
 
+    public static void main(String[] args) {
+        createMainFrame();
+        CityRandomizer.StartRandomizerThread();
+    }
+
+    public static void createMainFrame() {
         JFrame mainFrame = new JFrame("City Information");
         mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-
         mainFrame.setSize(frameWidth, frameHeight);
+        mainFrame.setLayout(new BorderLayout());
 
-        
+        mainFrame.add(createTopPanel(), BorderLayout.NORTH);
+        mainFrame.add(createCenterPanel(), BorderLayout.CENTER);
 
-        //Center Panel
+        mainFrame.setVisible(true);
+    }
+
+    private static JPanel createCenterPanel() {
         JPanel centerPanel = new JPanel();
         centerPanel.setLayout(new BoxLayout(centerPanel, BoxLayout.X_AXIS));
 
-        JPanel allCitiesSortedPanel = new JPanel();
-        allCitiesSortedPanel.setLayout(new FlowLayout(FlowLayout.LEFT));
-        allCitiesSortedPanel.setBorder(BorderFactory.createTitledBorder("All Cities (Sorted)"));
-        
-        JList<String> cityList1 = new JList<>(allCityIterator.getCityListInString());
-        JScrollPane allCitiesScrollPane = new JScrollPane(cityList1);
+        centerPanel.add(createAllCitiesPanel());
+        centerPanel.add(createCitiesByWeatherPanel());
 
-        JPanel citiesByWeatherPanel = new JPanel();
-        citiesByWeatherPanel.setLayout(new FlowLayout(FlowLayout.CENTER));
-        citiesByWeatherPanel.setBorder(BorderFactory.createTitledBorder("Cities by Weather Condition"));
+        return centerPanel;
+    }
 
-        JList<String> cityList2 = new JList<>(windyCityIterator.getCityListInString());
-        JScrollPane citiesByWeatherScrollPane = new JScrollPane(cityList2);
+    private static JPanel createAllCitiesPanel() {
+        JPanel panel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+        panel.setBorder(BorderFactory.createTitledBorder("All Cities (Sorted)"));
 
-        citiesByWeatherPanel.add(citiesByWeatherScrollPane);
-        
-        
-        allCitiesSortedPanel.add(allCitiesScrollPane);
+        updateCityListModel();
+        JScrollPane scrollPane = new JScrollPane(cityList1);
 
+        panel.add(scrollPane);
+        return panel;
+    }
 
+    private static JPanel createCitiesByWeatherPanel() {
+        JPanel panel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+        panel.setBorder(BorderFactory.createTitledBorder("Cities by Weather Condition"));
 
+        CityIterator sunnyCityIterator = new SunnyCityIterator();
+        JList<String> cityList2 = new JList<>(sunnyCityIterator.getCityListInString());
+        JScrollPane scrollPane = new JScrollPane(cityList2);
 
-        centerPanel.add(allCitiesSortedPanel);
-        centerPanel.add(citiesByWeatherPanel);
-        
+        panel.add(scrollPane);
+        return panel;
+    }
 
-
-        createTopPanel();
-        // Add the panel to the top of the frame
-        mainFrame.add(createTopPanel(), BorderLayout.NORTH);
-        mainFrame.add(centerPanel, BorderLayout.CENTER);
-
-        // Make the frame visible
-        mainFrame.setVisible(true);
-    }   
-    
-    private static JPanel createTopPanel(){
-        // Top Control Panel
+    private static JPanel createTopPanel() {
         JPanel topPanel = new JPanel();
         topPanel.setLayout(new BoxLayout(topPanel, BoxLayout.X_AXIS));
         topPanel.setBorder(BorderFactory.createTitledBorder("Controls"));
 
-        //LabelPanel
-        JPanel labelPanel = new JPanel();
-        labelPanel.setLayout(new FlowLayout(FlowLayout.LEFT));
+        topPanel.add(createLabelPanel());
+        topPanel.add(createComboBoxPanel());
 
-        //ComboBoxPanel
-        JPanel comboPanel = new JPanel();
-        comboPanel.setLayout(new FlowLayout(FlowLayout.RIGHT));
+        return topPanel;
+    }
 
-        //Labels
-        JPanel comboLabePanel = new JPanel();
-        comboLabePanel.setLayout(new BoxLayout(comboLabePanel, BoxLayout.Y_AXIS));
+    private static JPanel createLabelPanel() {
+        JPanel labelPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+        JPanel labelContainer = new JPanel();
+        labelContainer.setLayout(new BoxLayout(labelContainer, BoxLayout.Y_AXIS));
 
-        JLabel weatherLabel = new JLabel("Weather Condition");
-        JLabel sortingLabel = new JLabel("Sorting Type");
+        labelContainer.add(new JLabel("Weather Condition"));
+        labelContainer.add(new JLabel("Sorting Type"));
 
-        comboLabePanel.add(weatherLabel);
-        comboLabePanel.add(sortingLabel);
+        labelPanel.add(labelContainer);
+        return labelPanel;
+    }
 
-        labelPanel.add(comboLabePanel);
+    private static JPanel createComboBoxPanel() {
+        JPanel comboPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+        JPanel comboBoxContainer = new JPanel();
+        comboBoxContainer.setLayout(new BoxLayout(comboBoxContainer, BoxLayout.Y_AXIS));
 
-        //ComboBox
-        JPanel comboBoxPanel = new JPanel();
-        comboBoxPanel.setLayout(new BoxLayout(comboBoxPanel, BoxLayout.Y_AXIS));
-        
-        String[] weatherConditions = { "Sunny", "Rainy", "Snowy", "Windy"};
+        String[] weatherConditions = {"Sunny", "Rainy", "Snowy", "Windy"};
         JComboBox<String> weatherComboBox = new JComboBox<>(weatherConditions);
 
         String[] sortingTypes = {"Population", "Area", "Temperature"};
         JComboBox<String> sortingComboBox = new JComboBox<>(sortingTypes);
 
-        comboBoxPanel.add(weatherComboBox);
-        comboBoxPanel.add(sortingComboBox);
+        comboBoxContainer.add(weatherComboBox);
+        comboBoxContainer.add(sortingComboBox);
+        comboPanel.add(comboBoxContainer);
 
-        comboPanel.add(comboBoxPanel);
-
-        //adding to main Top Panel
-        topPanel.add(labelPanel);
-        topPanel.add(comboPanel);
-
-        return topPanel;
+        return comboPanel;
     }
-    public static void main(String[] args) {
-        createMainFrame();
+
+    public static void updateUI() {
+        SwingUtilities.invokeLater(UI::updateCityListModel);
+    }
+    
+    private static void updateCityListModel() {
+        cityListModel1.clear();
+        for (String cityStr : allCityIterator.getCityListInString()) {
+            cityListModel1.addElement(cityStr);
+        }
     }
 }

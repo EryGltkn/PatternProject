@@ -36,7 +36,7 @@ public class SunnyCityIterator implements CityIterator {
     public City[] getCityList() {
         City[] sunnyCities = new City[cityList.length];
         for (int i = 0; i < cityList.length; i++) {
-            if (cityList[i].getCurrentWeatherCondition().equals("SUNNY")) {
+            if (cityList[i].getCurrentWeatherCondition().equals("Sunny")) {
                 sunnyCities[i] = cityList[i];
             }
         }
