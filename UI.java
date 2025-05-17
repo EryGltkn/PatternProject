@@ -7,12 +7,17 @@ public class UI {
     private static final int frameHeight = 600;
 
     private static DefaultListModel<String> cityListModel1 = new DefaultListModel<>();
+    private static DefaultListModel<String> cityListModelByWeather = new DefaultListModel<>();
     private static JList<String> cityList1 = new JList<>(cityListModel1);
+    private static JList<String> cityList2 = new JList<>(cityListModelByWeather);
     private static CityIterator allCityIterator = new AllCityIterator();
+    private static CityIterator cityIterator = new SunnyCityIterator();
+    private static CitySorter citySorter = new CityNameSorter();
 
     public static void main(String[] args) {
         createMainFrame();
         CityRandomizer.StartRandomizerThread();
+        updateUI();
     }
 
     public static void createMainFrame() {
@@ -41,7 +46,7 @@ public class UI {
         JPanel panel = new JPanel(new FlowLayout(FlowLayout.LEFT));
         panel.setBorder(BorderFactory.createTitledBorder("All Cities (Sorted)"));
 
-        updateCityListModel();
+        updateAllCityListModel();
         JScrollPane scrollPane = new JScrollPane(cityList1);
 
         panel.add(scrollPane);
@@ -52,8 +57,8 @@ public class UI {
         JPanel panel = new JPanel(new FlowLayout(FlowLayout.LEFT));
         panel.setBorder(BorderFactory.createTitledBorder("Cities by Weather Condition"));
 
-        CityIterator sunnyCityIterator = new SunnyCityIterator();
-        JList<String> cityList2 = new JList<>(sunnyCityIterator.getCityListInString());
+
+        updateWeatherCityList();
         JScrollPane scrollPane = new JScrollPane(cityList2);
 
         panel.add(scrollPane);
@@ -91,8 +96,24 @@ public class UI {
         String[] weatherConditions = {"Sunny", "Rainy", "Snowy", "Windy"};
         JComboBox<String> weatherComboBox = new JComboBox<>(weatherConditions);
 
-        String[] sortingTypes = {"Population", "Area", "Temperature"};
+        String[] sortingTypes = {"Population", "Area", "Name"};
         JComboBox<String> sortingComboBox = new JComboBox<>(sortingTypes);
+
+        weatherComboBox.addActionListener(e -> {
+            String selectedWeather = (String) weatherComboBox.getSelectedItem();
+            if (selectedWeather != null) {
+                updateCityIterator(selectedWeather);
+                updateUI();
+            }
+        });
+
+        sortingComboBox.addActionListener(e -> {
+            String selectedSorting = (String) sortingComboBox.getSelectedItem();
+            if (selectedSorting != null) {
+                updateCitySorter(selectedSorting);
+                updateUI();
+            }
+        });
 
         comboBoxContainer.add(weatherComboBox);
         comboBoxContainer.add(sortingComboBox);
@@ -102,13 +123,65 @@ public class UI {
     }
 
     public static void updateUI() {
-        SwingUtilities.invokeLater(UI::updateCityListModel);
+        SwingUtilities.invokeLater(UI::updateAllCityListModel);
+        SwingUtilities.invokeLater(UI::updateWeatherCityList);
+        SwingUtilities.invokeLater(() -> {
+            cityList1.setModel(cityListModel1);
+            cityList2.setModel(cityListModelByWeather);
+        });
+        
     }
     
-    private static void updateCityListModel() {
+    private static void updateCityIterator(String weatherCondition) {
+        switch (weatherCondition) {
+            case "Sunny":
+                cityIterator = new SunnyCityIterator();
+                break;
+            case "Rainy":
+                cityIterator = new RainyCityIterator();
+                break;
+            case "Snowy":
+                cityIterator = new SnowyCityIterator();
+                break;
+            case "Windy":
+                cityIterator = new WindyCityIterator();
+                break;
+        }
+    }
+
+    private static void updateCitySorter(String selectedSorting) {
+    switch (selectedSorting) {
+        case "Population":
+            citySorter = new CityPopulationSorter();
+            break;
+        case "Area":
+            citySorter = new CityAreaSorter();
+            break;
+        case "Name":
+            citySorter = new CityNameSorter();
+            break;
+    }
+}
+
+    private static void updateAllCityListModel() {
         cityListModel1.clear();
-        for (String cityStr : allCityIterator.getCityListInString()) {
-            cityListModel1.addElement(cityStr);
+        City[] cityList = allCityIterator.getCityList();
+        cityList = citySorter.sortCities(cityList, true);
+        for (City city : cityList) {
+            if (city != null) {
+                cityListModel1.addElement("City Name: " + city.getName() + " (Population: " + city.getPopulation() + ", Area: " + city.getArea() + ", Temperature: " + city.getCurrentTemperature() + ", Weather Condition: " + city.getCurrentWeatherCondition() + ")");
+            }
+        }
+    }
+
+    private static void updateWeatherCityList() {
+        cityListModelByWeather.clear();
+        City[] cityList = cityIterator.getCityList();
+        cityList = citySorter.sortCities(cityList, true);
+        for (City city : cityList) {
+            if (city != null) {
+                cityListModelByWeather.addElement("City Name: " + city.getName() + " (Population: " + city.getPopulation() + ", Area: " + city.getArea() + ", Temperature: " + city.getCurrentTemperature() + ", Weather Condition: " + city.getCurrentWeatherCondition() + ")");
+            }
         }
     }
 }

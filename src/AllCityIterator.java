@@ -29,16 +29,4 @@ public class AllCityIterator implements CityIterator {
     public City[] getCityList() {
         return cityList;
     }
-
-    @Override
-    public String[] getCityListInString() {
-        City[] windyCities = getCityList();
-        String[] windyCitiesString = new String[windyCities.length];
-        for (int i = 0; i < windyCities.length; i++) {
-            if (windyCities[i] != null) {
-                windyCitiesString[i] = "City Name: " + windyCities[i].getName() + "(Population:" + windyCities[i].getPopulation() + ", Area:" + windyCities[i].getArea() + ", Temperature: " + windyCities[i].getCurrentTemperature() + ", Weather Condition: " + windyCities[i].getCurrentWeatherCondition() + ")";
-            }
-        }
-        return windyCitiesString;
-    }
 }

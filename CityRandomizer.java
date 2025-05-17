@@ -11,7 +11,7 @@ public class CityRandomizer {
                         city.randomizeTemperature();
                         UI.updateUI();
                     }
-                    Thread.sleep(5000);
+                    Thread.sleep(3000);
                 } catch (InterruptedException e) {
                     System.out.println("Randomizer thread interrupted");
                     break;
