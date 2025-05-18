@@ -28,7 +28,7 @@ class Cities {
 
     private void createCityList() {
         try {
-            String Jcontent = new String(Files.readAllBytes(Paths.get("C:\\Users\\PC\\Documents\\Github\\Java\\PatternProject\\src\\cities.json")));
+            String Jcontent = new String(Files.readAllBytes(Paths.get("cities.json")));
             JSONArray citiesArray = new JSONArray(Jcontent);
 
             City[] cityList = new City[citiesArray.length()];
