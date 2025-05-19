@@ -1,2 +1,2 @@
 Main-Class: Main
-Class-Path: lib/json-20230618.jar lib/jfreechart-1.5.4.jar lib/jcommon-1.0.24.jar
+Class-Path: lib/jfreechart-1.5.0.jar lib/json-20250107.jar

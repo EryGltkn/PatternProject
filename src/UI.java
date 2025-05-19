@@ -10,7 +10,7 @@ import org.jfree.data.category.DefaultCategoryDataset;
 import org.jfree.data.general.DefaultPieDataset;
 
 
-public class UI {
+public class UI implements WeatherObserver {
 
     private static final int frameWidth = 800;
     private static final int frameHeight = 600;
@@ -371,5 +371,15 @@ public class UI {
                 cityListModelByWeather.addElement("City Name: " + city.getName() + " (Population: " + city.getPopulation() + ", Area: " + city.getArea() + ", Temperature: " + city.getCurrentTemperature() + ", Weather Condition: " + city.getCurrentWeatherCondition() + ")");
             }
         }
+    }
+
+    @Override
+    public void update(String cityName, String weatherCondition, float temperature) {
+        SwingUtilities.invokeLater(() -> {
+            updateAllCityListModel();
+            updateWeatherCityList();
+            updateTemperatureDataset();
+            updateWeatherDataset();
+        });
     }
 }

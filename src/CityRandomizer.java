@@ -3,13 +3,17 @@ public class CityRandomizer {
         Cities citiesInstance = Cities.GetCitiesInstance();
         City[] cityList = citiesInstance.getCityList();
         
+        // Register UI as observer for all cities
+        for (City city : cityList) {
+            city.registerObserver(new UI());
+        }
+        
         Thread randomizerThread = new Thread(() -> {
             while (true) {
                 try {
                     for (City city : cityList) {
                         city.randomizeWeatherCondition();
                         city.randomizeTemperature();
-                        UI.updateUI();
                     }
                     Thread.sleep(3000);
                 } catch (InterruptedException e) {
